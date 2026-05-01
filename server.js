@@ -13,6 +13,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ethara-teamsync-secure-jwt-key-202
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'login.html'));
+});
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'frontend/login.html')));
 
 // MongoDB Connection
