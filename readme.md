@@ -6,7 +6,7 @@ A full-stack web application for managing projects, teams, and tasks with role-b
 https://teamsync-task-manager-production.up.railway.app
 
 ## GitHub Repository
-https://github.com/yourusername/teamsync-task-manager
+https://github.com/Aneesh-trisal/teamsync-task-manager
 
 ## Features
 
