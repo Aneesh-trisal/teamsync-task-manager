@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamSync - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .brand-icon {
+            width: 30px;
+            height: 30px;
+            background: #1a6eff;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .btn-logout {
+            padding: 7px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            background: #fff;
+            color: #444;
+            border: 1.5px solid #e2e5ea;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            background: #f7f8fa;
+            border-color: #c8ccd4;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            border: 1px solid #e8eaed;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 18px;
+        }
+
+        .project-selector {
+            display: flex;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+
+        select,
+        input {
+            font-size: 14px;
+            padding: 10px 13px;
+            border: 1.5px solid #e2e5ea;
+            border-radius: 8px;
+            outline: none;
+            background: #fff;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #1a6eff;
+            box-shadow: 0 0 0 3px rgba(26, 110, 255, 0.1);
+        }
+
+        .btn {
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #1a6eff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #155ed6;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 14px;
+        }
+
+        .stat {
+            flex: 1;
+            background: #f7f8fa;
+            border: 1px solid #e8eaed;
+            border-radius: 10px;
+            padding: 18px 22px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        #teamList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        #teamList span {
+            background: #eff4ff;
+            color: #1a6eff;
+            border: 1px solid #d0e1ff;
+            padding: 5px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .delete-btn {
+            background: #e03b3b;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .form-grid label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .task-card {
+            background: #fff;
+            border: 1.5px solid #e8eaed;
+            padding: 16px 18px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .task-card.done {
+            background: #f6fef8;
+            border-color: #a3d9b1;
+        }
+
+        .task-card.overdue {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .task-btn {
+            padding: 6px 13px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1.5px solid #e2e5ea;
+            background: #fff;
+        }
+
+        .task-btn.start {
+            color: #1a6eff;
+            border-color: #b3ccff;
+        }
+
+        .task-btn.done-btn {
+            color: #1a9e4e;
+            border-color: #a3d9b1;
+        }
+
+        .task-btn.del {
+            color: #e03b3b;
+            border-color: #fccfcf;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 9px;
+            border-radius: 20px;
+            margin-left: 6px;
+        }
+
+        .badge-done {
+            background: #e6f9ed;
+            color: #1a9e4e;
+        }
+
+        .badge-progress {
+            background: #fff4e0;
+            color: #c07a00;
+        }
+
+        .badge-pending {
+            background: #f0f2f5;
+            color: #777;
+        }
+
+        .badge-overdue {
+            background: #fef2c7;
+            color: #c2410f;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 36px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .due-date {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="9 11 12 14 22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+            </div>
+            TeamSync
+        </div>
+        <div class="nav-right">
+            <span>Logged in as <strong id="userEmail">user@email.com</strong></span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="section">
+            <div class="section-title">Select Project</div>
+            <div class="project-selector">
+                <select id="projectSelect" onchange="switchProject()" style="flex:1"></select>
+                <button class="btn" onclick="showCreateProject()">+ New Project</button>
+            </div>
+        </div>
+
+        <div id="createProjectSec" class="section" style="display:none;">
+            <div class="section-title">Create New Project</div>
+            <input type="text" id="newProjectName" placeholder="Project name" style="width:100%;margin-bottom:12px;">
+            <button class="btn" onclick="createNewProject()">Create Project</button>
+            <button class="btn" style="background:#64748b;margin-left:8px;"
+                onclick="hideCreateProject()">Cancel</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Project</div>
+            <div class="project-info"><strong>Current Project:</strong> <span id="projName">Loading...</span></div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Overview</div>
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-label">Total Tasks</div>
+                    <div class="stat-value" id="totTasks">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value" id="doneTasks">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Overdue</div>
+                    <div class="stat-value" id="overdueTasks" style="color:#c2410f;">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="teamSec" style="display:none;">
+            <div class="section-title">Team Members</div>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <input type="text" id="newMem" placeholder="Add new member (name)" style="flex:1">
+                <button class="btn" onclick="addMem()">Add</button>
+            </div>
+            <div id="teamList"></div>
+        </div>
+
+        <div class="section" id="addTaskSec" style="display:none;">
+            <div class="section-title">Add New Task</div>
+            <div class="form-grid">
+                <div>
+                    <label for="tTitle">Task Title</label>
+                    <input type="text" id="tTitle" placeholder="e.g. Design homepage">
+                </div>
+                <div>
+                    <label for="assignTo">Assigned To</label>
+                    <select id="assignTo"></select>
+                </div>
+                <div>
+                    <label for="tDueDate">Due Date</label>
+                    <input type="date" id="tDueDate">
+                </div>
+            </div>
+            <button class="btn" onclick="addNewTask()">Add Task</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">All Tasks</div>
+            <div id="taskList">
+                <div class="empty-state">Loading tasks...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = window.location.origin;
+        let currentProjectId = null;
+        let members = [];
+        let myRole = '';
+        let myEmail = '';
+        let allProjects = [];
+
+        // Simple escape function
+        function esc(str) {
+            return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const token = getToken();
+            if (!token) {
+                alert("Session expired. Please login again.");
+                logout();
+                return null;
+            }
+
+            options.headers = {
+                ...options.headers,
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+
+            const res = await fetch(url, options);
+            if (res.status === 401 || res.status === 403) {
+                alert("Session expired or unauthorized.");
+                logout();
+                return null;
+            }
+            return res;
+        }
+
+        function isOverdue(dueDateStr, status) {
+            if (!dueDateStr || status === 'Done') return false;
+            const due = new Date(dueDateStr);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return due < today;
+        }
+
+        async function loadProjects() {
+            const res = await fetchWithAuth(`${API}/projects`);
+            if (!res || !res.ok) return;
+
+            allProjects = await res.json();
+            const select = document.getElementById('projectSelect');
+            select.innerHTML = '';
+
+            allProjects.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p._id;
+                opt.textContent = p.name;
+                if (p._id === currentProjectId) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        async function switchProject() {
+            currentProjectId = document.getElementById('projectSelect').value;
+            localStorage.setItem('currentProjectId', currentProjectId);
+            await loadCurrentProject();
+        }
+
+        async function loadCurrentProject() {
+            if (!currentProjectId) return;
+
+            try {
+                const res = await fetchWithAuth(`${API}/project/${currentProjectId}`);
+                if (!res || !res.ok) return;
+
+                const proj = await res.json();
+                document.getElementById('projName').textContent = proj.name + ' (Shared Project)';
+
+                members = proj.members || [myEmail];
+                document.getElementById('teamSec').style.display = (myRole === 'admin') ? 'block' : 'none';
+                document.getElementById('addTaskSec').style.display = (myRole === 'admin') ? 'block' : 'none';
+
+                const tasksRes = await fetchWithAuth(`${API}/tasks/${currentProjectId}`);
+                if (!tasksRes || !tasksRes.ok) return;
+
+                const tasks = await tasksRes.json();
+
+                document.getElementById('totTasks').textContent = tasks.length;
+                document.getElementById('doneTasks').textContent = tasks.filter(t => t.status === 'Done').length;
+                document.getElementById('overdueTasks').textContent = tasks.filter(t => isOverdue(t.dueDate, t.status)).length;
+
+                showTasks(tasks);
+                fillAssignDropdown();
+                showTeam();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function showCreateProject() {
+            document.getElementById('createProjectSec').style.display = 'block';
+        }
+
+        function hideCreateProject() {
+            document.getElementById('createProjectSec').style.display = 'none';
+        }
+
+        async function createNewProject() {
+            const name = document.getElementById('newProjectName').value.trim();
+            if (!name) return alert("Project name is required");
+
+            try {
+                const res = await fetchWithAuth(`${API}/project`, {
+                    method: 'POST',
+                    body: JSON.stringify({ name })
+                });
+
+                if (res && res.ok) {
+                    const newProj = await res.json();
+                    currentProjectId = newProj._id;
+                    localStorage.setItem('currentProjectId', currentProjectId);
+                    hideCreateProject();
+                    document.getElementById('newProjectName').value = '';
+                    await loadProjects();
+                    await loadCurrentProject();
+                    alert(`Project "${newProj.name}" created!`);
+                }
+            } catch (e) {
+                alert('Failed to create project');
+            }
+        }
+
+        function fillAssignDropdown() {
+            const sel = document.getElementById('assignTo');
+            sel.innerHTML = '';
+            members.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                sel.appendChild(opt);
+            });
+        }
+
+        function showTeam() {
+            const list = document.getElementById('teamList');
+            list.innerHTML = members.map(m => `
+                <span>${esc(m)}
+                    ${myRole === 'admin' && m.toLowerCase() !== myEmail.toLowerCase() ?
+                    `<button class="delete-btn" onclick="remMem('${esc(m)}')">×</button>` : ''}
+                </span>
+            `).join('');
+        }
+
+        async function remMem(name) {
+            if (!confirm(`Remove ${name}?`)) return;
+            // ... rest remains same
+            try {
+                await fetchWithAuth(`${API}/project/${currentProjectId}/members/${name}`, { method: 'DELETE' });
+                const fresh = await fetchWithAuth(`${API}/project/${currentProjectId}`);
+                if (fresh && fresh.ok) {
+                    const p = await fresh.json();
+                    members = p.members || [myEmail];
+                    showTeam();
+                    fillAssignDropdown();
+                }
+            } catch (e) {
+                alert('Failed to remove member');
+            }
+        }
+
+        async function addMem() {
+            const input = document.getElementById('newMem');
+            const name = input.value.trim();
+            if (!name) return;
+
+            try {
+                const res = await fetchWithAuth(`${API}/user`, {
+                    method: 'POST',
+                    body: JSON.stringify({ name })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (!members.includes(data.email)) members.push(data.email);
+                    await fetchWithAuth(`${API}/project/${currentProjectId}/members`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ members })
+                    });
+
+                    const fresh = await fetchWithAuth(`${API}/project/${currentProjectId}`);
+                    if (fresh && fresh.ok) {
+                        const p = await fresh.json();
+                        members = p.members || [myEmail];
+                    }
+
+                    fillAssignDropdown();
+                    showTeam();
+                    input.value = '';
+                    alert(`Member added! Email: ${data.email}`);
+                }
+            } catch (e) {
+                alert('Failed to add member');
+            }
+        }
+
+        function getBadge(status, dueDate) {
+            if (status === 'Done') return 'badge-done';
+            if (isOverdue(dueDate, status)) return 'badge-overdue';
+            if (status === 'In Progress') return 'badge-progress';
+            return 'badge-pending';
+        }
+
+        function showTasks(tasks) {
+            const container = document.getElementById('taskList');
+            if (tasks.length === 0) {
+                container.innerHTML = '<div class="empty-state">No tasks yet</div>';
+                return;
+            }
+
+            let html = '';
+            tasks.forEach(t => {
+                const done = t.status === 'Done';
+                const overdue = isOverdue(t.dueDate, t.status);
+                const isMine = String(t.assignedTo || '').toLowerCase() === String(myEmail || '').toLowerCase();
+                const canDo = myRole === 'admin' || isMine;
+                const dueHTML = t.dueDate ? `<div class="due-date">Due: ${new Date(t.dueDate).toLocaleDateString('en-IN')}</div>` : '';
+
+                html += `
+                <div class="task-card ${done ? 'done' : ''} ${overdue ? 'overdue' : ''}">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                        <div>
+                            <div style="font-weight:600;font-size:14px;color:#111;margin-bottom:4px;">${esc(t.title)}</div>
+                            <div style="font-size:13px;color:#777;">${esc(t.assignedTo)} <span class="badge ${getBadge(t.status, t.dueDate)}">${esc(t.status)}</span></div>
+                            ${dueHTML}
+                        </div>
+                        <div class="task-actions">
+                            ${canDo && t.status === 'Pending' ? `<button class="task-btn start" onclick="startTask('${esc(t._id)}')">Start</button>` : ''}
+                            ${canDo && t.status !== 'Done' ? `<button class="task-btn done-btn" onclick="doneTask('${esc(t._id)}')">Mark Done</button>` : ''}
+                            ${myRole === 'admin' ? `<button class="task-btn del" onclick="delTask('${esc(t._id)}')">Delete</button>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        async function addNewTask() {
+            const title = document.getElementById('tTitle').value.trim();
+            const who = document.getElementById('assignTo').value;
+            const dueDate = document.getElementById('tDueDate').value;
+
+            if (!title || !who || !currentProjectId) return alert('Fill all fields');
+
+            try {
+                const res = await fetchWithAuth(`${API}/task`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title,
+                        assignedTo: who,
+                        projectId: currentProjectId,
+                        dueDate: dueDate || undefined
+                    })
+                });
+
+                if (res && res.ok) {
+                    document.getElementById('tTitle').value = '';
+                    document.getElementById('tDueDate').value = '';
+                    await loadCurrentProject();
+                }
+            } catch (e) {
+                alert('Failed to add task.');
+            }
+        }
+
+        async function startTask(id) {
+            try {
+                const res = await fetchWithAuth(`${API}/task/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'In Progress' })
+                });
+                if (res && res.ok) await loadCurrentProject();
+            } catch (e) {
+                alert('Failed to update task.');
+            }
+        }
+
+        async function doneTask(id) {
+            try {
+                const res = await fetchWithAuth(`${API}/task/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'Done' })
+                });
+                if (res && res.ok) await loadCurrentProject();
+            } catch (e) {
+                alert('Failed to update task.');
+            }
+        }
+
+        async function delTask(id) {
+            if (!confirm('Delete this task?')) return;
+            try {
+                const res = await fetchWithAuth(`${API}/task/${id}`, { method: 'DELETE' });
+                if (res && res.ok) await loadCurrentProject();
+            } catch (e) {
+                alert('Failed to delete task.');
+            }
+        }
+
+        function logout() {
+            if (confirm('Logout?')) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function loadDash() {
+            myEmail = localStorage.getItem('currentUser');
+            myRole = (localStorage.getItem('role') || 'member').toLowerCase();
+
+            if (!myEmail || !getToken()) {
+                alert("Session expired. Please login again.");
+                return window.location.href = 'login.html';
+            }
+
+            document.getElementById('userEmail').textContent = myEmail;
+            currentProjectId = localStorage.getItem('currentProjectId');
+
+            await loadProjects();
+
+            if (allProjects.length > 0) {
+                if (!currentProjectId || !allProjects.find(p => p._id === currentProjectId)) {
+                    currentProjectId = allProjects[0]._id;
+                    localStorage.setItem('currentProjectId', currentProjectId);
+                }
+                await loadCurrentProject();
+            } else {
+                document.getElementById('projName').textContent = "No projects yet. Create one using + New Project";
+                document.getElementById('taskList').innerHTML = '<div class="empty-state">Create your first project to get started</div>';
+            }
+        }
+
+        window.onload = loadDash;
+    </script>
+</body>
+
+</html>

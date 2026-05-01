@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamSync – Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 36px 36px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 28px;
+        }
+
+        .brand-icon {
+            width: 30px;
+            height: 30px;
+            background: #2563eb;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .heading {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .subtext {
+            font-size: 13.5px;
+            color: #64748b;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 10.5px;
+            margin-top: 6px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .error {
+            display: none;
+            margin-top: 12px;
+            padding: 9px 12px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            color: #dc2626;
+            font-size: 13px;
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+            </div>
+            <span class="brand-name">TeamSync</span>
+        </div>
+
+        <p class="heading">Create new account</p>
+        <p class="subtext">Enter your details to get started.</p>
+
+        <div class="field">
+            <label for="emailInput">Email address</label>
+            <input type="email" id="emailInput" placeholder="you@example.com">
+        </div>
+
+        <div class="field">
+            <label for="passInput">Password</label>
+            <input type="password" id="passInput" placeholder="Create password">
+        </div>
+
+        <button id="signupBtn" onclick="signup()">Sign up</button>
+        <div id="err" class="error"></div>
+
+        <p style="text-align:center; margin-top:20px">
+            <a href="login.html" class="link">Already have an account? Login</a>
+        </p>
+    </div>
+
+    <p class="footer">© 2026 TeamSync. All rights reserved.</p>
+
+    <script>
+        const API = window.location.origin;
+
+        // Handle signup
+        function signup() {
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passInput').value.trim();
+            const errorDiv = document.getElementById('err');
+            const btn = document.getElementById('signupBtn');
+
+            errorDiv.style.display = 'none';
+
+            // Basic validation
+            if (!email || !password) {
+                errorDiv.textContent = "Email and password are required.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Disable button while processing
+            btn.disabled = true;
+            btn.textContent = "Creating account...";
+
+            fetch(`${API}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+                .then(res => res.json().then(data => ({ status: res.status, data })))
+                .then(({ status, data }) => {
+                    if (status !== 200) {
+                        errorDiv.textContent = data.error || "Failed to create account";
+                        errorDiv.style.display = 'block';
+                        resetButton();
+                        return;
+                    }
+
+                    // Save user info
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('currentUser', data.email);
+                    localStorage.setItem('role', data.role || 'member');
+
+                    window.location.href = 'dashboard.html';
+                })
+                .catch(() => {
+                    errorDiv.textContent = "Can't connect to server right now.";
+                    errorDiv.style.display = 'block';
+                    resetButton();
+                });
+        }
+
+        function resetButton() {
+            const btn = document.getElementById('signupBtn');
+            btn.disabled = false;
+            btn.textContent = "Sign up";
+        }
+
+        // Enter key support
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") signup();
+        });
+    </script>
+</body>
+
+</html>
