@@ -3,7 +3,7 @@
 A full-stack web application for managing projects, teams, and tasks with role-based access control.
 
 ## Live Application URL
-https://your-app-name.up.railway.app
+https://teamsync-task-manager-production.up.railway.app
 
 ## GitHub Repository
 https://github.com/yourusername/teamsync-task-manager
