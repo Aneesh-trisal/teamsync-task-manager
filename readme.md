@@ -31,7 +31,7 @@ https://github.com/yourusername/teamsync-task-manager
 1. Clone the repository
 2. Run `npm install`
 3. Create a `.env` file with the following variables:
-   MONGO_URI=mongodb+srv://aneeshtrisal23_db_user:qmYlC0Gg6z9DSicU@cluster0.h4j6llv.mongodb.net/?appName=Cluster0
+   MONGO_URI=MONGODB_ATLAS
 JWT_SECRET=ethara-teamsync-secure-jwt-key-2026
 4. Run `npm start`
 5. Access the application at http://localhost:3000
